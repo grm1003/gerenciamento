@@ -15,22 +15,33 @@ public class PisoEstacionamento {
            vagas[i] = new Vaga(true, null);
        }
    }
+
+   public void fechaDiaPiso(){
+       for (int i = 0; i < vagas.length; i++) {
+           vagas[i] = new Vaga(true, null);
+       }
+
+   }
    public void PreencheVaga(int vaga, Carro carro){
        for (int i = 0; i<vagas.length;i++) {
-           if(i == vaga && vagas[i].isVazia()){
-              vagas[i].setVazia(false);
-              vagas[i].setCarro(carro);
+           if(i == vaga){
+               if(vagas[i].isVazia()){
+                   vagas[i].setVazia(false);
+                   vagas[i].setCarro(carro);
+               }else throw new IllegalArgumentException("Vaga já está preenchida!");
 
-           }else throw new IllegalArgumentException("Vaga já está preenchida!");
+           }
        }
    }
 
     public void LiberaVaga(int vaga, Carro carro){
         for (int i = 0; i<vagas.length;i++) {
-            if(i == vaga && !vagas[i].isVazia()){
-                vagas[i].setVazia(true);
-                vagas[i].setCarro(null);
-            }else throw new IllegalArgumentException("Vaga já vazia!");
+            if(i == vaga){
+                if(!vagas[i].isVazia()){
+                    vagas[i].setVazia(true);
+                    vagas[i].setCarro(null);
+                }else throw new IllegalArgumentException("Vaga já está preenchida!");
+            }
         }
     }
 
