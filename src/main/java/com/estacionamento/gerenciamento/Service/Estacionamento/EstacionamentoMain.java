@@ -1,12 +1,11 @@
 package com.estacionamento.gerenciamento.Service.Estacionamento;
 
 import com.estacionamento.gerenciamento.Entity.Cartao;
-import com.estacionamento.gerenciamento.Entity.Estrutura.PisoEstacionamento;
 import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
 import com.estacionamento.gerenciamento.Entity.Fabrica.HondaFabrica;
 import com.estacionamento.gerenciamento.Service.Fachada.EstacionamentoFachada;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 public class EstacionamentoMain {
     public static void main(String[] args) {
@@ -16,6 +15,7 @@ public class EstacionamentoMain {
         Estacionamento estacionamento = new Estacionamento();
         estacionamentoFachada.estacionamentoAbre(estacionamento.getPisos());
         Cartao hondafit = estacionamentoFachada.entraCarro(estacionamento.getPisos().get(0),4,fit);
+        hondafit.setEntrada(LocalDateTime.now().minusHours(2).minusMinutes(2));
         estacionamentoFachada.saiCarro(estacionamento.getPisos().get(0),4,hondafit,"Pix");
 
     }

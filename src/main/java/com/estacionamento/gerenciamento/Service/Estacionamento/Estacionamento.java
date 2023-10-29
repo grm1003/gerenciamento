@@ -1,8 +1,6 @@
 package com.estacionamento.gerenciamento.Service.Estacionamento;
 
 import com.estacionamento.gerenciamento.Entity.Estrutura.PisoEstacionamento;
-import com.estacionamento.gerenciamento.Service.Fachada.EstacionamentoFachada;
-
 import java.util.ArrayList;
 
 public class Estacionamento {

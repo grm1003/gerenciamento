@@ -59,7 +59,6 @@ public class Cartao {
     //seta tempo de entrada do carro no estacionamento e soma o total a uma taxa base
     public void registrarEntrada() {
         entrada = LocalDateTime.now();
-
     }
 
     //seta tempo de saida do carro no estacionamento e calcula duração e total do cartao a ser pago
@@ -90,6 +89,8 @@ public class Cartao {
         return (horas*preco_horas)+(minutos*preco_min);
     }
 
-
-
+    //para teste de calculo
+    public void setEntrada(LocalDateTime entrada) {
+        this.entrada = entrada;
+    }
 }

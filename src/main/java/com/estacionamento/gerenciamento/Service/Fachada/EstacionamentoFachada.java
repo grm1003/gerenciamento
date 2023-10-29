@@ -64,7 +64,7 @@ public class EstacionamentoFachada {
                 //setar metodo de pagamento a preferencia do usuário
                 if(tipoPagamento.equals("Pix"))cartao.setPagamentoStrategy(pix);
                 if(tipoPagamento.equals("Crédito"))cartao.setPagamentoStrategy(cartaoCredito);
-                else cartao.setPagamentoStrategy(cartaoDedito);
+                if(tipoPagamento.equals("Débito")) cartao.setPagamentoStrategy(cartaoDedito);
 
                 //realiza o pagamento do cartao e seta cartao como pago
                 cartao.realizaPagamento(total);
