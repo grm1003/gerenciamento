@@ -4,18 +4,9 @@ import com.estacionamento.gerenciamento.Entity.Cartao;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
+
 @Getter
 public class Carro {
-    Cartao cartao;
-
-    public void setCartao(Cartao cartao) {
-        this.cartao = cartao;
-    }
-
-    public Cartao getCartao() {
-        return cartao;
-    }
 
     String placa;
     String modelo;

@@ -3,7 +3,9 @@ package com.estacionamento.gerenciamento.Entity.Estrutura;
 import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
 
 public class Vaga {
+    //status vaga (vazia ou cheia)
     private boolean vazia;
+    //Carro que ocupa a vaga em caso dela vazia, valor nulo
     private Carro carro;
 
     public Vaga(boolean vazia, Carro carro) {

@@ -1,5 +1,6 @@
 package com.estacionamento.gerenciamento.Service.Estacionamento;
 
+import com.estacionamento.gerenciamento.Entity.Cartao;
 import com.estacionamento.gerenciamento.Entity.Estrutura.PisoEstacionamento;
 import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
 import com.estacionamento.gerenciamento.Entity.Fabrica.HondaFabrica;
@@ -11,11 +12,11 @@ public class EstacionamentoMain {
     public static void main(String[] args) {
         HondaFabrica honda = new HondaFabrica();
         Carro fit = honda.criaCarro("KHM1092","FIT");
-        EstacionamentoFachada estacionamentoFachada = new EstacionamentoFachada();
+        EstacionamentoFachada estacionamentoFachada = new EstacionamentoFachada(0.12, 3);
         Estacionamento estacionamento = new Estacionamento();
         estacionamentoFachada.estacionamentoAbre(estacionamento.getPisos());
-        estacionamentoFachada.entraCarro(estacionamento.getPisos().get(0),4,fit);
-        estacionamentoFachada.saiCarro(estacionamento.getPisos().get(0),4,fit,"Pix");
+        Cartao hondafit = estacionamentoFachada.entraCarro(estacionamento.getPisos().get(0),4,fit);
+        estacionamentoFachada.saiCarro(estacionamento.getPisos().get(0),4,hondafit,"Pix");
 
     }
 }
