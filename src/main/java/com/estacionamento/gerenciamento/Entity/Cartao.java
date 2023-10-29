@@ -52,14 +52,14 @@ public class Cartao {
         this.carro = carro;
         registrarEntrada();
         this.saida = null;
-        this.total = 0;
+        this.total = 2;
         this.pago = false;
     }
 
     //seta tempo de entrada do carro no estacionamento e soma o total a uma taxa base
     public void registrarEntrada() {
         entrada = LocalDateTime.now();
-        this.total += 2;
+
     }
 
     //seta tempo de saida do carro no estacionamento e calcula duração e total do cartao a ser pago
