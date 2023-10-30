@@ -4,6 +4,7 @@ import com.estacionamento.gerenciamento.Entity.Cartao;
 import com.estacionamento.gerenciamento.Entity.Estrutura.PisoEstacionamento;
 import com.estacionamento.gerenciamento.Entity.Estrutura.Vaga;
 import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
+import com.estacionamento.gerenciamento.Service.Logger.Logger;
 import com.estacionamento.gerenciamento.Service.Pagamentos.CartaoCrédito;
 import com.estacionamento.gerenciamento.Service.Pagamentos.CartaoDédito;
 import com.estacionamento.gerenciamento.Service.Pagamentos.PagamentosStrategy;
@@ -35,6 +36,8 @@ public class EstacionamentoFachada {
             if(!piso.EstaCheio()){
                 //preenche vaga com o carro
                 piso.PreencheVaga(vaga, carro);
+                Logger logger = Logger.getInstance();
+                logger.println("Carro entrou no estacionamento: " + carro.toString());
 
                 //Cria um novo cartão para o carro que acabou de entrar
                 return new Cartao(minuto,hora, carro);
@@ -54,11 +57,11 @@ public class EstacionamentoFachada {
         Pix pix = new Pix();
         try {
             //verifica se tem vagas preenchidas
-            if(piso.ContaVagasDisponiveis() < piso.tamanhoEstacionamento()){
+            if(piso.ContaVagasDisponiveis() < piso.tamanhoEstacionamento()) {
                 Vaga[] verif = piso.getVagas();
-            if(verif[vaga].isVazia()) throw new IllegalStateException("Vaga está vazia");
+                if(verif[vaga].isVazia()) throw new IllegalStateException("Vaga está vazia");
 
-            //retorna valor a ser pago e guarda em total
+                //retorna valor a ser pago e guarda em total
                 double total = cartao.registrarSaida();
 
                 //setar metodo de pagamento a preferencia do usuário
@@ -73,7 +76,10 @@ public class EstacionamentoFachada {
                 if(cartao.isPago())piso.LiberaVaga(vaga);
 
                 //salvar registro de banco de pagamento e utilização da vaga
-                System.out.println("Carro saiu do estacionamento");
+                Logger logger = Logger.getInstance();
+                logger.println("Carro saiu do estacionamento: ");;
+                // Incluir carro nessa funcao e descomentar a linha de baixo
+                // logger.println("Carro saiu do estacionamento: " + carro.toString());
             }
         }catch (Exception e){
             System.out.println("Erro: "+ e);
