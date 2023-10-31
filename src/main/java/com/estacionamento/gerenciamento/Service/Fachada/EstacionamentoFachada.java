@@ -4,15 +4,24 @@ import com.estacionamento.gerenciamento.Entity.Cartao;
 import com.estacionamento.gerenciamento.Entity.Estrutura.PisoEstacionamento;
 import com.estacionamento.gerenciamento.Entity.Estrutura.Vaga;
 import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
+import com.estacionamento.gerenciamento.Repository.CarroRepository;
+import com.estacionamento.gerenciamento.Repository.CartaoRepository;
 import com.estacionamento.gerenciamento.Service.Logger.Logger;
 import com.estacionamento.gerenciamento.Service.Pagamentos.CartaoCrédito;
 import com.estacionamento.gerenciamento.Service.Pagamentos.CartaoDédito;
 import com.estacionamento.gerenciamento.Service.Pagamentos.PagamentosStrategy;
 import com.estacionamento.gerenciamento.Service.Pagamentos.Pix;
+import org.hibernate.service.spi.InjectService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+
 public class EstacionamentoFachada {
+    private CarroRepository carroRepository;
+    private CartaoRepository cartaoRepository;
     private  double minuto;
     private  double hora;
 
@@ -38,9 +47,13 @@ public class EstacionamentoFachada {
                 piso.PreencheVaga(vaga, carro);
                 Logger logger = Logger.getInstance();
                 logger.println("Carro entrou no estacionamento: " + carro.toString());
+                //salva carro
 
-                //Cria um novo cartão para o carro que acabou de entrar
-                return new Cartao(minuto,hora, carro);
+
+                //Cria um novo cartão para o carro que acabou de entraCarrp
+                Cartao fiscal = new Cartao(minuto,hora, carro);
+
+                return fiscal;
 
                 //teriamos que salvar esse cartão em algum banco de dados para salvar as informações
             }else System.out.println("Estacionameto ocupado");
@@ -77,7 +90,7 @@ public class EstacionamentoFachada {
 
                 //salvar registro de banco de pagamento e utilização da vaga
                 Logger logger = Logger.getInstance();
-                logger.println("Carro saiu do estacionamento: ");;
+                logger.println("Carro saiu do estacionamento");;
                 // Incluir carro nessa funcao e descomentar a linha de baixo
                 // logger.println("Carro saiu do estacionamento: " + carro.toString());
             }

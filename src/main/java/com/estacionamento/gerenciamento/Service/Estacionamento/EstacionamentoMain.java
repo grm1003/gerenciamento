@@ -4,6 +4,7 @@ import com.estacionamento.gerenciamento.Entity.Cartao;
 import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
 import com.estacionamento.gerenciamento.Entity.Fabrica.HondaFabrica;
 import com.estacionamento.gerenciamento.Service.Fachada.EstacionamentoFachada;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 

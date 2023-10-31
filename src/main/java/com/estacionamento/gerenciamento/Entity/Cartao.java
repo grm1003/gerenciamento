@@ -2,11 +2,23 @@ package com.estacionamento.gerenciamento.Entity;
 
 import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
 import com.estacionamento.gerenciamento.Service.Pagamentos.PagamentosStrategy;
+import jakarta.persistence.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+
+@Entity
+@Table(name = "Cartoes")
 public class Cartao {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
 
     //preço de cada minuto do carro dentro do estacionamento
     private final double preco_min;
