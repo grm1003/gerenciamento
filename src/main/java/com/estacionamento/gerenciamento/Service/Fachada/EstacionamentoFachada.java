@@ -7,6 +7,8 @@ import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
 import com.estacionamento.gerenciamento.Repository.CarroRepository;
 import com.estacionamento.gerenciamento.Repository.CartaoRepository;
 import com.estacionamento.gerenciamento.Service.Logger.Logger;
+import com.estacionamento.gerenciamento.Service.Observer.EstacionamentoObserver;
+import com.estacionamento.gerenciamento.Service.Observer.Observer;
 import com.estacionamento.gerenciamento.Service.Pagamentos.CartaoCrédito;
 import com.estacionamento.gerenciamento.Service.Pagamentos.CartaoDédito;
 import com.estacionamento.gerenciamento.Service.Pagamentos.PagamentosStrategy;
@@ -19,11 +21,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 
-public class EstacionamentoFachada {
+public class EstacionamentoFachada implements EstacionamentoObserver {
     private CarroRepository carroRepository;
     private CartaoRepository cartaoRepository;
     private  double minuto;
     private  double hora;
+    ArrayList<Observer> observers = new ArrayList<>();
 
     public EstacionamentoFachada(double minuto, double hora) {
         this.minuto = minuto;
@@ -52,6 +55,7 @@ public class EstacionamentoFachada {
 
                 //Cria um novo cartão para o carro que acabou de entraCarrp
                 Cartao fiscal = new Cartao(minuto,hora, carro);
+                notificarObserver(piso);
 
                 return fiscal;
 
@@ -60,6 +64,7 @@ public class EstacionamentoFachada {
         }catch (Exception e){
             System.out.println("Erro: "+ e);
         }
+
         return null;
     }
 
@@ -93,9 +98,31 @@ public class EstacionamentoFachada {
                 logger.println("Carro saiu do estacionamento");;
                 // Incluir carro nessa funcao e descomentar a linha de baixo
                 // logger.println("Carro saiu do estacionamento: " + carro.toString());
+
+                notificarObserver(piso);
             }
         }catch (Exception e){
             System.out.println("Erro: "+ e);
+        }
+    }
+
+    @Override
+    public void adicionarObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void excluirObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+
+
+    @Override
+    public void notificarObserver( PisoEstacionamento pisos) {
+        for (Observer a: observers){
+           a.update(pisos.getNome(), pisos.ContaVagasDisponiveis());
+
         }
     }
 }
