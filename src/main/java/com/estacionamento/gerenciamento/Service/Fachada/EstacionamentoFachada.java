@@ -11,18 +11,17 @@ import com.estacionamento.gerenciamento.Service.Observer.EstacionamentoObserver;
 import com.estacionamento.gerenciamento.Service.Observer.Observer;
 import com.estacionamento.gerenciamento.Service.Pagamentos.CartaoCrédito;
 import com.estacionamento.gerenciamento.Service.Pagamentos.CartaoDédito;
-import com.estacionamento.gerenciamento.Service.Pagamentos.PagamentosStrategy;
 import com.estacionamento.gerenciamento.Service.Pagamentos.Pix;
-import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
-
+@Service
 public class EstacionamentoFachada implements EstacionamentoObserver {
+    @Autowired
     private CarroRepository carroRepository;
+    @Autowired
     private CartaoRepository cartaoRepository;
     private  double minuto;
     private  double hora;
@@ -51,7 +50,7 @@ public class EstacionamentoFachada implements EstacionamentoObserver {
                 Logger logger = Logger.getInstance();
                 logger.println("Carro entrou no estacionamento: " + carro.toString());
                 //salva carro
-
+                carroRepository.save(carro);
 
                 //Cria um novo cartão para o carro que acabou de entraCarrp
                 Cartao fiscal = new Cartao(minuto,hora, carro);

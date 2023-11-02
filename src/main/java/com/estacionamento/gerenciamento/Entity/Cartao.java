@@ -2,24 +2,21 @@ package com.estacionamento.gerenciamento.Entity;
 
 import com.estacionamento.gerenciamento.Entity.Fabrica.Carro;
 import com.estacionamento.gerenciamento.Service.Pagamentos.PagamentosStrategy;
-import jakarta.persistence.*;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 
-@Entity
-@Table(name = "Cartoes")
+@Data
+@Document(collation = "cartoes")
 public class Cartao {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
+    String id;
     //preço de cada minuto do carro dentro do estacionamento
     private final double preco_min;
 
@@ -27,7 +24,7 @@ public class Cartao {
     private final double preco_horas;
 
     //Carro vinculado a esse cartão
-    Carro carro;
+    String placa;
 
     //Data de entrada no estacionamento
     private LocalDateTime entrada;
@@ -42,6 +39,38 @@ public class Cartao {
 
     //verifica se cartão foi pago ou não
     private boolean pago;
+
+    public String getId() {
+        return id;
+    }
+
+    public double getPreco_min() {
+        return preco_min;
+    }
+
+    public double getPreco_horas() {
+        return preco_horas;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public LocalDateTime getEntrada() {
+        return entrada;
+    }
+
+    public LocalDateTime getSaida() {
+        return saida;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public PagamentosStrategy getPagamentoStrategy() {
+        return pagamentoStrategy;
+    }
 
     //retorna se foi pago ou não
     public boolean isPago() {
@@ -61,11 +90,12 @@ public class Cartao {
     public Cartao(double preco_min, double preco_horas, Carro carro) {
         this.preco_min = preco_min;
         this.preco_horas = preco_horas;
-        this.carro = carro;
+        this.placa = carro.getPlaca();
         registrarEntrada();
         this.saida = null;
         this.total = 2;
         this.pago = false;
+        this.id = carro.getPlaca()+entrada.toString();
     }
 
     //seta tempo de entrada do carro no estacionamento e soma o total a uma taxa base

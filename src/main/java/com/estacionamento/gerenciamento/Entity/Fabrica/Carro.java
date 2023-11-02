@@ -1,31 +1,31 @@
 package com.estacionamento.gerenciamento.Entity.Fabrica;
 
-import com.estacionamento.gerenciamento.Entity.Cartao;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+
+import lombok.Data;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @Getter
-@Entity
-@Table(name = "Carros")
+@Data
+@Document(collation = "carros")
 public class Carro {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String placa;
     private String modelo;
     private String marca;
 
-    public Long getId() {
-        return id;
-    }
 
     public Carro(String placa, String modelo, String marca) {
         this.placa = placa;
         this.modelo = modelo;
         this.marca = marca;
+    }
+
+    public String getPlaca() {
+        return placa;
     }
 
     @Override
