@@ -6,9 +6,11 @@ import com.estacionamento.gerenciamento.Entity.Fabrica.HondaFabrica;
 import com.estacionamento.gerenciamento.Service.Fachada.EstacionamentoFachada;
 import com.estacionamento.gerenciamento.Service.Observer.DisplayObserver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import java.time.LocalDateTime;
 
+@EnableMongoRepositories
 public class EstacionamentoMain {
     public static void main(String[] args) {
         HondaFabrica honda = new HondaFabrica();

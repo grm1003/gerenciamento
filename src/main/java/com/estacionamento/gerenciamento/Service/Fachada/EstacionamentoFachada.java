@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EstacionamentoFachada implements EstacionamentoObserver {
@@ -49,14 +50,16 @@ public class EstacionamentoFachada implements EstacionamentoObserver {
                 piso.PreencheVaga(vaga, carro);
                 Logger logger = Logger.getInstance();
                 logger.println("Carro entrou no estacionamento: " + carro.toString());
-                //salva carro
-                carroRepository.save(carro);
-
-                //Cria um novo cartão para o carro que acabou de entraCarrp
-                Cartao fiscal = new Cartao(minuto,hora, carro);
                 notificarObserver(piso);
+                //salva carro
+                if(!verificaPlacaSalva(carro.getPlaca()))carroRepository.save(carro);
 
-                return fiscal;
+                //Cria um novo cartão para o carro que acabou de entraCarro
+               if(!CartaonaoPago(carro.getPlaca())){
+                   Cartao novo = criaCartaoRegistro(carro.getPlaca());
+                   cartaoRepository.save(novo);
+                   return novo;
+               }
 
                 //teriamos que salvar esse cartão em algum banco de dados para salvar as informações
             }else System.out.println("Estacionameto ocupado");
@@ -69,36 +72,23 @@ public class EstacionamentoFachada implements EstacionamentoObserver {
 
     //processo de saida de um carro no estacionamento
     public void saiCarro(PisoEstacionamento piso, int vaga, Cartao cartao, String tipoPagamento){
-        CartaoCrédito cartaoCredito = new CartaoCrédito();
-        CartaoDédito cartaoDedito = new CartaoDédito();
-        Pix pix = new Pix();
         try {
             //verifica se tem vagas preenchidas
             if(piso.ContaVagasDisponiveis() < piso.tamanhoEstacionamento()) {
                 Vaga[] verif = piso.getVagas();
                 if(verif[vaga].isVazia()) throw new IllegalStateException("Vaga está vazia");
 
-                //retorna valor a ser pago e guarda em total
-                double total = cartao.registrarSaida();
-
-                //setar metodo de pagamento a preferencia do usuário
-                if(tipoPagamento.equals("Pix"))cartao.setPagamentoStrategy(pix);
-                if(tipoPagamento.equals("Crédito"))cartao.setPagamentoStrategy(cartaoCredito);
-                if(tipoPagamento.equals("Débito")) cartao.setPagamentoStrategy(cartaoDedito);
-
-                //realiza o pagamento do cartao e seta cartao como pago
-                cartao.realizaPagamento(total);
-
+                //retorna valor a ser pago e realiza pagamento
+                RealizaPagamento(cartao.registrarSaida(),cartao,tipoPagamento);
+                atualizaCartao(cartao);
                 //verifica se foi pago se sim ele libera a vaga do carro
                 if(cartao.isPago())piso.LiberaVaga(vaga);
-
                 //salvar registro de banco de pagamento e utilização da vaga
                 Logger logger = Logger.getInstance();
-                logger.println("Carro saiu do estacionamento");;
-                // Incluir carro nessa funcao e descomentar a linha de baixo
-                // logger.println("Carro saiu do estacionamento: " + carro.toString());
-
+                logger.println("Carro saiu do estacionamento");
                 notificarObserver(piso);
+
+
             }
         }catch (Exception e){
             System.out.println("Erro: "+ e);
@@ -123,5 +113,54 @@ public class EstacionamentoFachada implements EstacionamentoObserver {
            a.update(pisos.getNome(), pisos.ContaVagasDisponiveis());
 
         }
+    }
+
+    public Cartao criaCartaoRegistro(String placa){
+        Cartao fiscal = new Cartao(minuto,hora, placa);
+        return fiscal;
+    }
+
+    public Boolean verificaPlacaSalva(String placa){
+        Carro encontrado = carroRepository.findByPlaca(placa);
+        if(encontrado == null) return true;
+        else return false;
+    }
+
+    public Boolean CartaonaoPago(String placa){
+        List<Cartao> encontrados = cartaoRepository.findByPlaca(placa);
+        for(Cartao encontrado: encontrados){
+            if(!encontrado.isPago()) return false;
+        }
+        return true;
+    }
+
+    public void atualizaCartao(Cartao cartao){
+        Cartao cartaoAtualizar = null;
+        List<Cartao> encontrados = cartaoRepository.findByPlaca(cartao.getPlaca());
+        for(Cartao encontrado: encontrados){
+            if(!encontrado.isPago()) cartaoAtualizar = encontrado;
+        }
+        try {
+            cartaoAtualizar.setPago(true);
+            cartaoRepository.deleteById(cartaoAtualizar.getId());
+            cartaoRepository.save(cartaoAtualizar);
+
+        }catch (NullPointerException e){
+            System.out.println("Registro não encontrado");
+        }
+
+    }
+
+    public void definePagamento(Cartao cartao, String tipoPagamento){
+        if(tipoPagamento.equals("Pix"))cartao.setPagamentoStrategy(new Pix());
+        if(tipoPagamento.equals("Crédito"))cartao.setPagamentoStrategy(new CartaoCrédito());
+        if(tipoPagamento.equals("Débito")) cartao.setPagamentoStrategy(new CartaoDédito());
+    }
+
+    public void RealizaPagamento(double valor,Cartao cartao, String tipoPagamento){
+        //setar metodo de pagamento a preferencia do usuário
+         definePagamento(cartao, tipoPagamento);
+        //realiza o pagamento do cartao e seta cartao como pago
+        cartao.realizaPagamento(valor);
     }
 }

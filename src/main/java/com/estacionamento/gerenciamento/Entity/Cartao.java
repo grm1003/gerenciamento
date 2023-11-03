@@ -87,15 +87,15 @@ public class Cartao {
 
     //seta valores imutáveis de preço de minuto e hora, além de vicular a um carro
     //e registrar horário de entrada
-    public Cartao(double preco_min, double preco_horas, Carro carro) {
+    public Cartao(double preco_min, double preco_horas, String placa) {
         this.preco_min = preco_min;
         this.preco_horas = preco_horas;
-        this.placa = carro.getPlaca();
+        this.placa = placa;
         registrarEntrada();
         this.saida = null;
         this.total = 2;
         this.pago = false;
-        this.id = carro.getPlaca()+entrada.toString();
+        this.id = placa+entrada.toString();
     }
 
     //seta tempo de entrada do carro no estacionamento e soma o total a uma taxa base
